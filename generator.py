@@ -18,28 +18,38 @@ def build_site():
     content_dir = "content"
     output_dir = "output"
 
-    for filename in os.listdir(content_dir):
-        if filename.endswith(".md"):
-            filepath = os.path.join(content_dir, filename)
+    # Build a list of all markdown pages
+    pages = [f for f in os.listdir(content_dir) if f.endswith(".md")]
+    nav_links = [
+        {
+            "name": f.replace(".md", "").capitalize(),
+            "href": f.replace(".md", ".html")
+        }
+        for f in pages
+    ]
 
-            with open(filepath, "r", encoding="utf-8") as f:
-                markdown_text = f.read()
+    for filename in pages:
+        filepath = os.path.join(content_dir, filename)
 
-            html_content = markdown(markdown_text)
-            html_output = template.render(
-                site_title=config.get("site_title", "My Site"),
-                content=html_content,
-                page_title=filename.replace(".md", "").capitalize()
-            )
+        with open(filepath, "r", encoding="utf-8") as f:
+            markdown_text = f.read()
 
-            output_filename = filename.replace(".md", ".html")
-            output_path = os.path.join(output_dir, output_filename)
+        html_content = markdown(markdown_text)
+        html_output = template.render(
+            site_title=config.get("site_title", "My Site"),
+            content=html_content,
+            page_title=filename.replace(".md", "").capitalize(),
+            nav_links=nav_links
+        )
 
-            with open(output_path, "w", encoding="utf-8") as f:
-                f.write(html_output)
+        output_filename = filename.replace(".md", ".html")
+        output_path = os.path.join(output_dir, output_filename)
 
-            print(f"✅ Generated: {output_filename}")
+        with open(output_path, "w", encoding="utf-8") as f:
+            f.write(html_output)
+
+        print(f"Generated: {output_filename}")
 
 if __name__ == "__main__":
     build_site()
-    print("🎉 Site build complete!")
+    print("Site build complete!")

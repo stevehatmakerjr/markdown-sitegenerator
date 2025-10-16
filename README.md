@@ -4,6 +4,7 @@ A minimal **Markdown-to-HTML static site generator** written in Python.
 
 ## Features
 - Converts `.md` files in `/content` into `.html` files in `/output`
+- Automatically generates navigation links for all Markdown files
 - Uses Jinja2 templates for consistent page structure
 - Configurable title and author via `config.yaml`
 
